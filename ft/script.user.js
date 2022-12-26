@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Play
 // @namespace    https://faptitans.com/
-// @version      1.1
+// @version      1.2
 // @description  Automate the game play.
 // @author       Anonymous
 // @match        https://faptitans.com/
@@ -16,11 +16,11 @@ window.FtConfig = {
   isOnActivatingAbilities: false,
   isLockAutoBuy: false,
   rebornAtMax: 350,
-  rebornAtMin: 200,
+  rebornAtMin: 250,
   buyingMultiplierMin: 25,
   buyingMultiplierMax: 100,
-  startingGoldBonus: 1000,
-  startingDpsBonus: 500,
+  startingGoldBonus: 1500,
+  startingDpsBonus: 1000,
   isAutoPlay: false,
   isAutoReborn: false,
   isAutoClosePopup: false,
@@ -149,10 +149,11 @@ function buyHeroCards() {
   for (let i = 0; i < heroCardButtons.length; i++) {
     // if the button is not disabled
     if (!heroCardButtons[i].classList.contains("disabled")) {
-      sleep(200).then(() => {
-        if (window.FtConfig.isLockAutoBuy) return;
-        heroCardButtons[i].click();
-      });
+      if (window.FtConfig.isLockAutoBuy || window.isOnActivatingAbilities) {
+        window.FtConfig.isOnBuyingHeroes = false;
+        return;
+      }
+      heroCardButtons[i].click();
     }
   }
 
@@ -172,11 +173,12 @@ function buyHeroAbilities() {
   for (let i = 0; i < heroAbilityButtons.length; i++) {
     // if the button is not disabled
     if (!heroAbilityButtons[i].classList.contains("disable")) {
-      sleep(200).then(() => {
-        if (window.FtConfig.isLockAutoBuy) return;
-        // We click the image inside the button
-        heroAbilityButtons[i].querySelector(".icon").click();
-      });
+      if (window.FtConfig.isLockAutoBuy || window.isOnActivatingAbilities) {
+        window.FtConfig.isOnBuyingAbilities = false;
+        return;
+      }
+      // We click the image inside the button
+      heroAbilityButtons[i].querySelector(".icon").click();
     }
   }
 
@@ -300,17 +302,13 @@ function rebornHero() {
           sleep(1000).then(() => {
             setMultipleBuyAmount(window.FtConfig.buyingMultiplierMax);
 
-            window._U
-              .get("multipliers")
-              .add("DPS", {
-                value: new window._N(window.FtConfig.startingDpsBonus),
-              });
-              
-            window._U
-              .get("multipliers")
-              .add("gold", {
-                value: new window._N(window.FtConfig.startingGoldBonus),
-              });
+            window._U.get("multipliers").add("DPS", {
+              value: new window._N(window.FtConfig.startingDpsBonus),
+            });
+
+            window._U.get("multipliers").add("gold", {
+              value: new window._N(window.FtConfig.startingGoldBonus),
+            });
           });
         }
       });
@@ -467,7 +465,18 @@ function StartApp() {
       window._U.get("multipliers").add("gold", { value: new window._N(-1000) });
     }
   });
+
+  if (window.AUTO_START) {
+    sleep(5000).then(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "s" }));
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "w" }));
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "D" }));
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "G" }));
+    });
+  }
 }
 
 window.DEBUG = 0;
+window.AUTO_START = 1;
 StartApp();
