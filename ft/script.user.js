@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Play
 // @namespace    https://faptitans.com/
-// @version      1.0
+// @version      1.1
 // @description  Automate the game play.
 // @author       Anonymous
 // @match        https://faptitans.com/
@@ -298,7 +298,19 @@ function rebornHero() {
           rewardButton.click();
 
           sleep(1000).then(() => {
-            setMultipleBuyAmount(100);
+            setMultipleBuyAmount(window.FtConfig.buyingMultiplierMax);
+
+            window._U
+              .get("multipliers")
+              .add("DPS", {
+                value: new window._N(window.FtConfig.startingDpsBonus),
+              });
+              
+            window._U
+              .get("multipliers")
+              .add("gold", {
+                value: new window._N(window.FtConfig.startingGoldBonus),
+              });
           });
         }
       });
