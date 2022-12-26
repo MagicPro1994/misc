@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Play
 // @namespace    https://faptitans.com/
-// @version      1.2
+// @version      1.2.1
 // @description  Automate the game play.
 // @author       Anonymous
 // @match        https://faptitans.com/
@@ -75,13 +75,14 @@ function findModuleKeyByExports(modules, predicateFunc) {
 
 function registerSymbols(appWindow) {
   if (appWindow._G) return; // already registered
-  const id = (appWindow["_t"] = new Date().getTime());
+  const prefix = "_";
+  const id = (appWindow[prefix + "t"] = new Date().getTime());
   appWindow.webpackJsonp([id], {
     0: function (module, exports, require) {
       var modulesKey = Object.keys(require).find(
         (k) => require[k]["0"] && require[k]["0"].exports
       );
-      var modules = (appWindow["_" + id] = require[modulesKey]);
+      var modules = (appWindow[prefix + id] = require[modulesKey]);
       var moduleKey = findModuleKeyByExports(
         modules,
         (exports) => typeof exports.getUser == "function" && !!exports.app
@@ -468,11 +469,11 @@ function StartApp() {
 
   if (window.AUTO_START) {
     sleep(5000).then(() => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "s" }));
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "w" }));
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "D" }));
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "G" }));
+      window.dispatchEvent(new KeyboardEvent("keypress", { key: "a" }));
+      window.dispatchEvent(new KeyboardEvent("keypress", { key: "s" }));
+      window.dispatchEvent(new KeyboardEvent("keypress", { key: "w" }));
+      window.dispatchEvent(new KeyboardEvent("keypress", { key: "D" }));
+      window.dispatchEvent(new KeyboardEvent("keypress", { key: "G" }));
     });
   }
 }
