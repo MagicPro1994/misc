@@ -26,5 +26,5 @@ function registerSymbols(appWindow) {
 }
 
 window.addEventListener("load", function () {
-    registerSymbols(window);
+    console.log("Test data");
 });
