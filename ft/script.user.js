@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Play
 // @namespace    https://faptitans.com/
-// @version      1.2.3
+// @version      1.2.4
 // @description  Automate the game play.
 // @author       Anonymous
 // @match        https://faptitans.com/
@@ -70,7 +70,7 @@ window.FtConfig = {
 };
 
 function isEmpty(obj) {
-  if (obj !== null || obj !== undefined) {
+  if (obj !== undefined && obj !== null) {
     return Object.keys(obj).length === 0;
   }
   return true;
@@ -141,6 +141,7 @@ function closePopup() {
 
   if (closeButton) {
     closeButton.click();
+    return;
   }
 
   let closeButton2 = document.querySelector(
@@ -149,14 +150,18 @@ function closePopup() {
 
   if (closeButton2) {
     closeButton2.click();
+    return;
   }
 
   let closeButton3 = document.querySelector(
-    "#popupContainer .color-btn.collect .color-btn-text"
+    "#popupContainer .color-btn .color-btn-text"
   );
 
   if (closeButton3) {
-    closeButton3.click();
+    if (!closeButton3.textContent.includes("$")) {
+      closeButton3.click();
+      return;
+    }
   }
 }
 
