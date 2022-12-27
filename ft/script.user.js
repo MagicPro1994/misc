@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Play
 // @namespace    https://faptitans.com/
-// @version      1.2.1
+// @version      1.2.2
 // @description  Automate the game play.
 // @author       Anonymous
 // @match        https://faptitans.com/
@@ -69,14 +69,30 @@ window.FtConfig = {
   ],
 };
 
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function findModuleKeyByExports(modules, predicateFunc) {
   return Object.keys(modules).find((k) => predicateFunc(modules[k].exports));
 }
 
 function registerSymbols(appWindow) {
-  if (appWindow._G) return; // already registered
+  if (
+    !isEmpty(appWindow._G) &&
+    !isEmpty(appWindow._U) &&
+    !isEmpty(appWindow._N)
+  ) {
+    return; // already registered
+  }
+
   const prefix = "_";
   const id = (appWindow[prefix + "t"] = new Date().getTime());
+
   appWindow.webpackJsonp([id], {
     0: function (module, exports, require) {
       var modulesKey = Object.keys(require).find(
@@ -102,10 +118,6 @@ function registerSymbols(appWindow) {
       window.FtConfig.NumberManager = appWindow._N;
     },
   });
-}
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function continueOnError() {
@@ -134,6 +146,14 @@ function closePopup() {
 
   if (closeButton2) {
     closeButton2.click();
+  }
+
+  let closeButton3 = document.querySelector(
+    "#popupContainer .color-btn.collect .color-btn-text"
+  );
+
+  if (closeButton3) {
+    closeButton3.click();
   }
 }
 
