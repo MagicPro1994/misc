@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Play
 // @namespace    https://faptitans.com/
-// @version      1.2.2
+// @version      1.2.3
 // @description  Automate the game play.
 // @author       Anonymous
 // @match        https://faptitans.com/
@@ -15,11 +15,11 @@ window.FtConfig = {
   isOnBuyingAbilities: false,
   isOnActivatingAbilities: false,
   isLockAutoBuy: false,
-  rebornAtMax: 350,
+  rebornAtMax: 300,
   rebornAtMin: 250,
   buyingMultiplierMin: 25,
   buyingMultiplierMax: 100,
-  startingGoldBonus: 1500,
+  startingGoldBonus: 2000,
   startingDpsBonus: 1000,
   isAutoPlay: false,
   isAutoReborn: false,
@@ -70,7 +70,10 @@ window.FtConfig = {
 };
 
 function isEmpty(obj) {
-  return Object.keys(obj).length === 0;
+  if (obj !== null || obj !== undefined) {
+    return Object.keys(obj).length === 0;
+  }
+  return true;
 }
 
 function sleep(ms) {
